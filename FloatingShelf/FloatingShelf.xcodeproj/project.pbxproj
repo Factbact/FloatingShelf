@@ -1,0 +1,475 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F1000001 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000 /* AppDelegate.swift */; };
+		F1000003 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1000002 /* Assets.xcassets */; };
+		F1000010 /* FloatingShelf.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F100000E /* FloatingShelf.xcdatamodeld */; };
+		F1000012 /* Shelf.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000011 /* Shelf.swift */; };
+		F1000014 /* ShelfItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000013 /* ShelfItem.swift */; };
+		F1000016 /* ItemKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000015 /* ItemKind.swift */; };
+		F1000018 /* ItemStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000017 /* ItemStore.swift */; };
+		F100001A /* FileManager+Shelf.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000019 /* FileManager+Shelf.swift */; };
+		F100001C /* ThumbnailGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100001B /* ThumbnailGenerator.swift */; };
+		F100001E /* ShelfWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100001D /* ShelfWindowController.swift */; };
+		F1000020 /* ShelfWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100001F /* ShelfWindow.swift */; };
+		F1000022 /* ShelfViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000021 /* ShelfViewController.swift */; };
+		F1000024 /* ShelfItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000023 /* ShelfItemView.swift */; };
+		F1000026 /* ShelfGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000025 /* ShelfGridView.swift */; };
+		F1000028 /* ActionBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000027 /* ActionBarView.swift */; };
+		F100002A /* DropReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000029 /* DropReceiver.swift */; };
+		F100002C /* DragSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100002B /* DragSource.swift */; };
+		F100002E /* FilePromiseHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100002D /* FilePromiseHandler.swift */; };
+		F1000030 /* HotkeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100002F /* HotkeyManager.swift */; };
+		F1000032 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000031 /* Constants.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		F10FFFFD /* FloatingShelf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FloatingShelf.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1000000 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		F1000002 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F1000007 /* FloatingShelf.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FloatingShelf.entitlements; sourceTree = "<group>"; };
+		F100000F /* FloatingShelf.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FloatingShelf.xcdatamodel; sourceTree = "<group>"; };
+		F1000011 /* Shelf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shelf.swift; sourceTree = "<group>"; };
+		F1000013 /* ShelfItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShelfItem.swift; sourceTree = "<group>"; };
+		F1000015 /* ItemKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemKind.swift; sourceTree = "<group>"; };
+		F1000017 /* ItemStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemStore.swift; sourceTree = "<group>"; };
+		F1000019 /* FileManager+Shelf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Shelf.swift"; sourceTree = "<group>"; };
+		F100001B /* ThumbnailGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailGenerator.swift; sourceTree = "<group>"; };
+		F100001D /* ShelfWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShelfWindowController.swift; sourceTree = "<group>"; };
+		F100001F /* ShelfWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShelfWindow.swift; sourceTree = "<group>"; };
+		F1000021 /* ShelfViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShelfViewController.swift; sourceTree = "<group>"; };
+		F1000023 /* ShelfItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShelfItemView.swift; sourceTree = "<group>"; };
+		F1000025 /* ShelfGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShelfGridView.swift; sourceTree = "<group>"; };
+		F1000027 /* ActionBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionBarView.swift; sourceTree = "<group>"; };
+		F1000029 /* DropReceiver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropReceiver.swift; sourceTree = "<group>"; };
+		F100002B /* DragSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragSource.swift; sourceTree = "<group>"; };
+		F100002D /* FilePromiseHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePromiseHandler.swift; sourceTree = "<group>"; };
+		F100002F /* HotkeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyManager.swift; sourceTree = "<group>"; };
+		F1000031 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F10FFFFA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F10FFFF4 = {
+			isa = PBXGroup;
+			children = (
+				F10FFFFF /* FloatingShelf */,
+				F10FFFFE /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F10FFFFE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F10FFFFD /* FloatingShelf.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F10FFFFF /* FloatingShelf */ = {
+			isa = PBXGroup;
+			children = (
+				F1000033 /* App */,
+				F1000034 /* Models */,
+				F1000035 /* Services */,
+				F1000036 /* Windows */,
+				F1000037 /* Views */,
+				F1000038 /* DragDrop */,
+				F1000039 /* Utilities */,
+				F100003A /* Resources */,
+				F1000007 /* FloatingShelf.entitlements */,
+			);
+			path = FloatingShelf;
+			sourceTree = "<group>";
+		};
+		F1000033 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				F1000000 /* AppDelegate.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		F1000034 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F100000E /* FloatingShelf.xcdatamodeld */,
+				F1000011 /* Shelf.swift */,
+				F1000013 /* ShelfItem.swift */,
+				F1000015 /* ItemKind.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		F1000035 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				F1000017 /* ItemStore.swift */,
+				F1000019 /* FileManager+Shelf.swift */,
+				F100001B /* ThumbnailGenerator.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		F1000036 /* Windows */ = {
+			isa = PBXGroup;
+			children = (
+				F100001D /* ShelfWindowController.swift */,
+				F100001F /* ShelfWindow.swift */,
+				F1000021 /* ShelfViewController.swift */,
+			);
+			path = Windows;
+			sourceTree = "<group>";
+		};
+		F1000037 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F1000023 /* ShelfItemView.swift */,
+				F1000025 /* ShelfGridView.swift */,
+				F1000027 /* ActionBarView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F1000038 /* DragDrop */ = {
+			isa = PBXGroup;
+			children = (
+				F1000029 /* DropReceiver.swift */,
+				F100002B /* DragSource.swift */,
+				F100002D /* FilePromiseHandler.swift */,
+			);
+			path = DragDrop;
+			sourceTree = "<group>";
+		};
+		F1000039 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				F100002F /* HotkeyManager.swift */,
+				F1000031 /* Constants.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		F100003A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F1000002 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F10FFFFC /* FloatingShelf */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F100000A /* Build configuration list for PBXNativeTarget "FloatingShelf" */;
+			buildPhases = (
+				F10FFFF9 /* Sources */,
+				F10FFFFA /* Frameworks */,
+				F10FFFFB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FloatingShelf;
+			productName = FloatingShelf;
+			productReference = F10FFFFD /* FloatingShelf.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F10FFFF5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1520;
+				LastUpgradeCheck = 1520;
+				TargetAttributes = {
+					F10FFFFC = {
+						CreatedOnToolsVersion = 15.2;
+					};
+				};
+			};
+			buildConfigurationList = F10FFFF8 /* Build configuration list for PBXProject "FloatingShelf" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = F10FFFF4;
+			productRefGroup = F10FFFFE /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F10FFFFC /* FloatingShelf */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F10FFFFB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F1000003 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F10FFFF9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F1000001 /* AppDelegate.swift in Sources */,
+				F1000010 /* FloatingShelf.xcdatamodeld in Sources */,
+				F1000012 /* Shelf.swift in Sources */,
+				F1000014 /* ShelfItem.swift in Sources */,
+				F1000016 /* ItemKind.swift in Sources */,
+				F1000018 /* ItemStore.swift in Sources */,
+				F100001A /* FileManager+Shelf.swift in Sources */,
+				F100001C /* ThumbnailGenerator.swift in Sources */,
+				F100001E /* ShelfWindowController.swift in Sources */,
+				F1000020 /* ShelfWindow.swift in Sources */,
+				F1000022 /* ShelfViewController.swift in Sources */,
+				F1000024 /* ShelfItemView.swift in Sources */,
+				F1000026 /* ShelfGridView.swift in Sources */,
+				F1000028 /* ActionBarView.swift in Sources */,
+				F100002A /* DropReceiver.swift in Sources */,
+				F100002C /* DragSource.swift in Sources */,
+				F100002E /* FilePromiseHandler.swift in Sources */,
+				F1000030 /* HotkeyManager.swift in Sources */,
+				F1000032 /* Constants.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		F1000008 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		F1000009 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		F100000B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = FloatingShelf/FloatingShelf.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.floatingshelf.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		F100000C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = FloatingShelf/FloatingShelf.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.floatingshelf.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F10FFFF8 /* Build configuration list for PBXProject "FloatingShelf" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1000008 /* Debug */,
+				F1000009 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F100000A /* Build configuration list for PBXNativeTarget "FloatingShelf" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F100000B /* Debug */,
+				F100000C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		F100000E /* FloatingShelf.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				F100000F /* FloatingShelf.xcdatamodel */,
+			);
+			currentVersion = F100000F /* FloatingShelf.xcdatamodel */;
+			path = FloatingShelf.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = F10FFFF5 /* Project object */;
+}
