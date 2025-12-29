@@ -37,11 +37,21 @@ class ShelfWindow: NSPanel {
         isFloatingPanel = true
         becomesKeyOnlyIfNeeded = true
         
-        // Standard background (not transparent)
-        backgroundColor = NSColor.windowBackgroundColor
+        // Transparent window background for rounded corners
+        backgroundColor = .clear
+        isOpaque = false
         
         // Shadow for depth
         hasShadow = true
+        
+        // Apply rounded corners to content view
+        if let contentView = contentView {
+            contentView.wantsLayer = true
+            contentView.layer?.cornerRadius = 16
+            contentView.layer?.cornerCurve = .continuous
+            contentView.layer?.masksToBounds = true
+            contentView.layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
+        }
         
         // Make movable by background
         isMovableByWindowBackground = true

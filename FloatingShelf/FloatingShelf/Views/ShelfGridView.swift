@@ -33,6 +33,7 @@ class ShelfGridView: NSView {
     
     private func setupUI() {
         wantsLayer = true
+        layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
         
         // Empty state label
         emptyLabel.alignment = .center

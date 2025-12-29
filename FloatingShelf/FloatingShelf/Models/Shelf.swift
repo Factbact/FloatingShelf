@@ -9,6 +9,7 @@ import CoreData
 /// Swift wrapper around ShelfMO (Core Data managed object)
 struct Shelf {
     let id: UUID
+    var name: String
     var createdAt: Date
     var isPinned: Bool
     var isCollapsed: Bool
@@ -17,6 +18,7 @@ struct Shelf {
     var items: [ShelfItem]
     
     init(id: UUID = UUID(),
+         name: String = "New Shelf",
          createdAt: Date = Date(),
          isPinned: Bool = false,
          isCollapsed: Bool = false,
@@ -24,6 +26,7 @@ struct Shelf {
          positionY: Float = 100,
          items: [ShelfItem] = []) {
         self.id = id
+        self.name = name
         self.createdAt = createdAt
         self.isPinned = isPinned
         self.isCollapsed = isCollapsed
@@ -36,6 +39,7 @@ struct Shelf {
 @objc(ShelfMO)
 class ShelfMO: NSManagedObject {
     @NSManaged var id: UUID
+    @NSManaged var name: String
     @NSManaged var createdAt: Date
     @NSManaged var isPinned: Bool
     @NSManaged var isCollapsed: Bool
@@ -46,6 +50,7 @@ class ShelfMO: NSManagedObject {
     convenience init(context: NSManagedObjectContext, shelf: Shelf) {
         self.init(context: context)
         self.id = shelf.id
+        self.name = shelf.name
         self.createdAt = shelf.createdAt
         self.isPinned = shelf.isPinned
         self.isCollapsed = shelf.isCollapsed
@@ -56,6 +61,7 @@ class ShelfMO: NSManagedObject {
     func toShelf() -> Shelf {
         let itemsArray = (items as? Set<ShelfItemMO>)?.map { $0.toShelfItem() } ?? []
         return Shelf(id: id,
+                    name: name,
                     createdAt: createdAt,
                     isPinned: isPinned,
                     isCollapsed: isCollapsed,

@@ -52,22 +52,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private func setupMenuBar() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         
-        if let button = statusItem?.button {
-            if let image = NSImage(systemSymbolName: "tray.fill", accessibilityDescription: "Floating Shelf") {
-                button.image = image
-                button.image?.isTemplate = true
-            } else {
-                button.title = "📦"
-                button.toolTip = "FloatingShelf"
-            }
-        }
-        
-        let menu = NSMenu()
-        menu.addItem(withTitle: "New Shelf", action: #selector(createNewShelf), keyEquivalent: "n")
-        menu.addItem(NSMenuItem.separator())
-        menu.addItem(withTitle: "Quit FloatingShelf", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
-        
-        statusItem?.menu = menu
+        // Create custom view for drag and drop support
+        let menuBarView = MenuBarView(frame: NSRect(x: 0, y: 0, width: 22, height: 22))
+        menuBarView.appDelegate = self
+        statusItem?.view = menuBarView
     }
     
     // MARK: - Hotkey
@@ -85,26 +73,40 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         shelfWindowController?.createNewShelf()
     }
     
+    @objc func openShelf(_ shelfId: UUID) {
+        guard let shelf = ItemStore.shared.fetchShelf(by: shelfId) else { return }
+        shelfWindowController?.showShelf(shelf)
+    }
+    
     @objc func createNewShelfWithFiles(_ urls: [URL]) {
         print("📝 Creating new shelf with \(urls.count) files...")
         
-        // Create new shelf
+        // Create new shelf with first file name
         let position = CGPoint(x: 200, y: 400)
-        let shelf = ItemStore.shared.createShelf(position: position)
+        var shelf = ItemStore.shared.createShelf(position: position)
         
-        // Show the shelf window
-        shelfWindowController?.showShelf(shelf)
+        // Set shelf name to first file name (without extension)
+        if let firstFile = urls.first {
+            shelf.name = firstFile.deletingPathExtension().lastPathComponent
+            ItemStore.shared.updateShelf(shelf)
+        }
         
-        // Add files to the new shelf
+        // Add files to the shelf
         let dropReceiver = DropReceiver(shelfId: shelf.id)
         
-        // Process file URLs
         for url in urls {
             do {
-                try dropReceiver.processFileURL(url)
+                let item = try dropReceiver.processFileURL(url)
+                ItemStore.shared.addItem(item, to: shelf.id)
+                print("✅ Added file: \(url.lastPathComponent)")
             } catch {
-                print("Error processing file: \(error)")
+                print("❌ Error processing file: \(error)")
             }
+        }
+        
+        // Show the shelf window (after files are added)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            self?.shelfWindowController?.showShelf(shelf)
         }
     }
 }

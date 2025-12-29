@@ -48,12 +48,7 @@ class ShelfViewController: NSViewController {
     // MARK: - UI Setup
     
     private func setupUI() {
-        // Custom title bar for borderless window
-        let titleBar = createCustomTitleBar()
-        titleBar.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(titleBar)
-        
-        // Grid view for items
+        // Grid view for items (add first, so it's at bottom)
         gridView = ShelfGridView()
         gridView.translatesAutoresizingMaskIntoConstraints = false
         gridView.delegate = self
@@ -65,13 +60,18 @@ class ShelfViewController: NSViewController {
         actionBar.delegate = self
         view.addSubview(actionBar)
         
+        // Custom title bar for borderless window (add LAST to be on top)
+        let titleBar = createCustomTitleBar()
+        titleBar.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(titleBar)
+        
         // Layout constraints
         NSLayoutConstraint.activate([
             // Title bar at top
             titleBar.topAnchor.constraint(equalTo: view.topAnchor),
             titleBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             titleBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            titleBar.heightAnchor.constraint(equalToConstant: 28),
+            titleBar.heightAnchor.constraint(equalToConstant: 40),
             
             // Grid view
             gridView.topAnchor.constraint(equalTo: titleBar.bottomAnchor),
@@ -82,7 +82,7 @@ class ShelfViewController: NSViewController {
             actionBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             actionBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             actionBar.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            actionBar.heightAnchor.constraint(equalToConstant: 44)
+            actionBar.heightAnchor.constraint(equalToConstant: 32)
         ])
     }
     
@@ -91,25 +91,65 @@ class ShelfViewController: NSViewController {
         titleBar.wantsLayer = true
         titleBar.layer?.backgroundColor = NSColor.controlBackgroundColor.withAlphaComponent(0.95).cgColor
         
-        // Close button
+        // Close button - macOS style red circle
         let closeButton = NSButton()
-        closeButton.bezelStyle = .circular
-        closeButton.image = NSImage(systemSymbolName: "xmark.circle.fill", accessibilityDescription: "Close")
+        closeButton.bezelStyle = .regularSquare
         closeButton.isBordered = false
+        closeButton.wantsLayer = true
+        closeButton.layer?.cornerRadius = 14
+        closeButton.layer?.backgroundColor = NSColor.systemRed.cgColor
+        closeButton.title = ""
         closeButton.target = self
         closeButton.action = #selector(closeWindow)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
         
+        // Add X symbol inside
+        let xLabel = NSTextField(labelWithString: "✕")
+        xLabel.font = NSFont.systemFont(ofSize: 16, weight: .bold)
+        xLabel.textColor = NSColor.white
+        xLabel.translatesAutoresizingMaskIntoConstraints = false
+        closeButton.addSubview(xLabel)
+        
+        // Shelf name label (editable on double-click)
+        let nameField = NSTextField()
+        nameField.stringValue = shelf.name
+        nameField.font = NSFont.systemFont(ofSize: 12, weight: .medium)
+        nameField.textColor = NSColor.secondaryLabelColor
+        nameField.backgroundColor = .clear
+        nameField.isBordered = false
+        nameField.isEditable = true
+        nameField.focusRingType = .none
+        nameField.alignment = .center
+        nameField.target = self
+        nameField.action = #selector(shelfNameChanged(_:))
+        nameField.translatesAutoresizingMaskIntoConstraints = false
+        
         titleBar.addSubview(closeButton)
+        titleBar.addSubview(nameField)
         
         NSLayoutConstraint.activate([
-            closeButton.leadingAnchor.constraint(equalTo: titleBar.leadingAnchor, constant: 8),
+            // Close button - larger and more visible
+            closeButton.leadingAnchor.constraint(equalTo: titleBar.leadingAnchor, constant: 10),
             closeButton.centerYAnchor.constraint(equalTo: titleBar.centerYAnchor),
-            closeButton.widthAnchor.constraint(equalToConstant: 16),
-            closeButton.heightAnchor.constraint(equalToConstant: 16)
+            closeButton.widthAnchor.constraint(equalToConstant: 28),
+            closeButton.heightAnchor.constraint(equalToConstant: 28),
+            
+            // X centered in button
+            xLabel.centerXAnchor.constraint(equalTo: closeButton.centerXAnchor),
+            xLabel.centerYAnchor.constraint(equalTo: closeButton.centerYAnchor),
+            
+            // Name field - offset from close button to avoid overlap
+            nameField.leadingAnchor.constraint(equalTo: closeButton.trailingAnchor, constant: 8),
+            nameField.trailingAnchor.constraint(equalTo: titleBar.trailingAnchor, constant: -8),
+            nameField.centerYAnchor.constraint(equalTo: titleBar.centerYAnchor)
         ])
         
         return titleBar
+    }
+    
+    @objc private func shelfNameChanged(_ sender: NSTextField) {
+        shelf.name = sender.stringValue
+        ItemStore.shared.updateShelf(shelf)
     }
     
     @objc private func closeWindow() {

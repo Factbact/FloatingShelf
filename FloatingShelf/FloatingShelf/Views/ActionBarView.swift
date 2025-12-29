@@ -35,50 +35,52 @@ class ActionBarView: NSView {
         wantsLayer = true
         layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
         
-        // Create buttons
-        shareButton = createButton(title: "Share", 
-                                   icon: "square.and.arrow.up",
-                                   action: #selector(shareAction))
+        // Create compact icon-only buttons
+        shareButton = createIconButton(icon: "square.and.arrow.up", 
+                                       tooltip: "Share",
+                                       action: #selector(shareAction))
         
-        copyButton = createButton(title: "Copy",
-                                 icon: "doc.on.doc",
-                                 action: #selector(copyAction))
+        copyButton = createIconButton(icon: "doc.on.doc",
+                                      tooltip: "Copy",
+                                      action: #selector(copyAction))
         
-        saveButton = createButton(title: "Save to...",
-                                 icon: "folder",
-                                 action: #selector(saveAction))
+        saveButton = createIconButton(icon: "folder",
+                                      tooltip: "Save to...",
+                                      action: #selector(saveAction))
         
-        deleteButton = createButton(title: "Delete",
-                                   icon: "trash",
-                                   action: #selector(deleteAction))
+        deleteButton = createIconButton(icon: "trash",
+                                        tooltip: "Delete",
+                                        action: #selector(deleteAction))
         
-        // Stack view for button layout
-        let stackView = NSStackView(views: [shareButton, copyButton, saveButton, NSView(), deleteButton])
+        // Stack view for compact button layout
+        let stackView = NSStackView(views: [shareButton, copyButton, saveButton, deleteButton])
         stackView.orientation = .horizontal
-        stackView.spacing = 12
-        stackView.edgeInsets = NSEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
+        stackView.distribution = .fillEqually
+        stackView.spacing = 4
         stackView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(stackView)
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            stackView.topAnchor.constraint(equalTo: topAnchor, constant: 4),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4)
         ])
         
         setEnabled(false)
     }
     
-    private func createButton(title: String, icon: String, action: Selector) -> NSButton {
+    private func createIconButton(icon: String, tooltip: String, action: Selector) -> NSButton {
         let button = NSButton()
-        button.title = title
-        button.bezelStyle = .rounded
+        button.bezelStyle = .regularSquare
+        button.isBordered = false
         button.setButtonType(.momentaryPushIn)
+        button.toolTip = tooltip
         
-        if let image = NSImage(systemSymbolName: icon, accessibilityDescription: title) {
+        if let image = NSImage(systemSymbolName: icon, accessibilityDescription: tooltip) {
             button.image = image
-            button.imagePosition = .imageLeading
+            button.imagePosition = .imageOnly
+            button.imageScaling = .scaleProportionallyUpOrDown
         }
         
         button.target = self
