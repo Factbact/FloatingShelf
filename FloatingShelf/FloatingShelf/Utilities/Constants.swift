@@ -15,8 +15,8 @@ enum Constants {
     static let defaultHotkeyModifiers: UInt32 = 768 // Cmd + Shift
     
     // UI Constants
-    static let defaultShelfWidth: CGFloat = 600
-    static let defaultShelfHeight: CGFloat = 400
+    static let defaultShelfWidth: CGFloat = 320
+    static let defaultShelfHeight: CGFloat = 280
     static let itemThumbnailSize: CGFloat = 96
     static let maxThumbnailSize: CGFloat = 512
     

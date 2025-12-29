@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F1000001 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000 /* AppDelegate.swift */; };
+		F1000002A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000002B /* main.swift */; };
 		F1000003 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1000002 /* Assets.xcassets */; };
 		F1000010 /* FloatingShelf.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F100000E /* FloatingShelf.xcdatamodeld */; };
 		F1000012 /* Shelf.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000011 /* Shelf.swift */; };
@@ -30,8 +31,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		F10FFFFD /* FloatingShelf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FloatingShelf.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A046C562F0223C80092D6C2 /* FloatingShelf.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = FloatingShelf.xcodeproj; sourceTree = "<group>"; };
 		F1000000 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		F1000002B /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		F1000002 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F1000007 /* FloatingShelf.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FloatingShelf.entitlements; sourceTree = "<group>"; };
 		F100000F /* FloatingShelf.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FloatingShelf.xcdatamodel; sourceTree = "<group>"; };
@@ -52,6 +54,7 @@
 		F100002D /* FilePromiseHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePromiseHandler.swift; sourceTree = "<group>"; };
 		F100002F /* HotkeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyManager.swift; sourceTree = "<group>"; };
 		F1000031 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		F10FFFFD /* FloatingShelf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FloatingShelf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,42 +68,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		F10FFFF4 = {
+		9A046C572F0223C80092D6C2 /* Products */ = {
 			isa = PBXGroup;
-			children = (
-				F10FFFFF /* FloatingShelf */,
-				F10FFFFE /* Products */,
-			);
-			sourceTree = "<group>";
-		};
-		F10FFFFE /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				F10FFFFD /* FloatingShelf.app */,
-			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		F10FFFFF /* FloatingShelf */ = {
-			isa = PBXGroup;
-			children = (
-				F1000033 /* App */,
-				F1000034 /* Models */,
-				F1000035 /* Services */,
-				F1000036 /* Windows */,
-				F1000037 /* Views */,
-				F1000038 /* DragDrop */,
-				F1000039 /* Utilities */,
-				F100003A /* Resources */,
-				F1000007 /* FloatingShelf.entitlements */,
-			);
-			path = FloatingShelf;
 			sourceTree = "<group>";
 		};
 		F1000033 /* App */ = {
 			isa = PBXGroup;
 			children = (
 				F1000000 /* AppDelegate.swift */,
+				F1000002B /* main.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -173,6 +150,39 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		F10FFFF4 = {
+			isa = PBXGroup;
+			children = (
+				F10FFFFF /* FloatingShelf */,
+				F10FFFFE /* Products */,
+				9A046C562F0223C80092D6C2 /* FloatingShelf.xcodeproj */,
+			);
+			sourceTree = "<group>";
+		};
+		F10FFFFE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F10FFFFD /* FloatingShelf.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F10FFFFF /* FloatingShelf */ = {
+			isa = PBXGroup;
+			children = (
+				F1000033 /* App */,
+				F1000034 /* Models */,
+				F1000035 /* Services */,
+				F1000036 /* Windows */,
+				F1000037 /* Views */,
+				F1000038 /* DragDrop */,
+				F1000039 /* Utilities */,
+				F100003A /* Resources */,
+				F1000007 /* FloatingShelf.entitlements */,
+			);
+			path = FloatingShelf;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -219,6 +229,12 @@
 			mainGroup = F10FFFF4;
 			productRefGroup = F10FFFFE /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 9A046C572F0223C80092D6C2 /* Products */;
+					ProjectRef = 9A046C562F0223C80092D6C2 /* FloatingShelf.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				F10FFFFC /* FloatingShelf */,
@@ -243,6 +259,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F1000001 /* AppDelegate.swift in Sources */,
+				F1000002A /* main.swift in Sources */,
 				F1000010 /* FloatingShelf.xcdatamodeld in Sources */,
 				F1000012 /* Shelf.swift in Sources */,
 				F1000014 /* ShelfItem.swift in Sources */,
@@ -438,20 +455,20 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		F10FFFF8 /* Build configuration list for PBXProject "FloatingShelf" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F1000008 /* Debug */,
-				F1000009 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		F100000A /* Build configuration list for PBXNativeTarget "FloatingShelf" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F100000B /* Debug */,
 				F100000C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F10FFFF8 /* Build configuration list for PBXProject "FloatingShelf" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1000008 /* Debug */,
+				F1000009 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22225" systemVersion="23A344" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Shelf" representedClassName="ShelfMO" syncable="YES">
+        <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isCollapsed" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="isPinned" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="positionX" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="positionY" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="items" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ShelfItem" inverseName="shelf" inverseEntity="ShelfItem"/>
+    </entity>
+    <entity name="ShelfItem" representedClassName="ShelfItemMO" syncable="YES">
+        <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="displayName" attributeType="String"/>
+        <attribute name="fileSize" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="kind" attributeType="String"/>
+        <attribute name="payloadPath" optional="YES" attributeType="String"/>
+        <attribute name="sourceApp" optional="YES" attributeType="String"/>
+        <attribute name="thumbnailPath" optional="YES" attributeType="String"/>
+        <relationship name="shelf" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Shelf" inverseName="items" inverseEntity="Shelf"/>
+    </entity>
+</model>

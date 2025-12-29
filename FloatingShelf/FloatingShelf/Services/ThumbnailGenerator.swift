@@ -4,6 +4,7 @@
 //
 
 import Cocoa
+import QuickLookThumbnailing
 
 class ThumbnailGenerator {
     
