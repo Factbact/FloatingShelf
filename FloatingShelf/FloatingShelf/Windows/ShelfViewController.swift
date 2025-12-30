@@ -13,10 +13,13 @@ class ShelfViewController: NSViewController {
     private var actionBar: ActionBarView!
     private var dropReceiver: DropReceiver!
     private var nameField: NSTextField?  // Changed to optional to prevent crash
+    private var colorButton: NSButton?   // Promoted to property for popover positioning
     
     private var items: [ShelfItem] = []
     private var selectedItems: Set<UUID> = []
+
     private var autoHideTimer: Timer?
+    private var eventMonitor: Any?  // For monitoring Quick Look key events
     
     init(shelf: Shelf) {
         self.shelf = shelf
@@ -197,66 +200,69 @@ class ShelfViewController: NSViewController {
         xLabel.translatesAutoresizingMaskIntoConstraints = false
         closeButton.addSubview(xLabel)
         
-        // Color picker button - using NSView with click gesture for better reliability
-        let colorButton = NSView()
-        colorButton.wantsLayer = true
-        colorButton.layer?.cornerRadius = 4
-        colorButton.layer?.backgroundColor = shelfColor.cgColor
-        colorButton.layer?.borderWidth = 1
-        colorButton.layer?.borderColor = NSColor.white.withAlphaComponent(0.6).cgColor
-        colorButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Add click gesture recognizer
-        let clickGesture = NSClickGestureRecognizer(target: self, action: #selector(showColorPicker))
-        colorButton.addGestureRecognizer(clickGesture)
-        
-        // Shelf name label (editable)
-        let field = NSTextField()
-        field.stringValue = shelf.name
-        field.font = NSFont.systemFont(ofSize: 11, weight: .medium)
-        field.textColor = NSColor.white
-        field.backgroundColor = .clear
-        field.isBordered = false
-        field.isEditable = true
-        field.focusRingType = .none
-        field.alignment = .center
-        field.target = self
-        field.action = #selector(shelfNameChanged(_:))
-        field.translatesAutoresizingMaskIntoConstraints = false
-        self.nameField = field
-        
-        // Add subviews (order matters for z-index)
-        titleBar.addSubview(field)
-        titleBar.addSubview(closeButton)
-        titleBar.addSubview(colorButton) // Last = on top
-        
-        NSLayoutConstraint.activate([
-            // Close button
-            closeButton.leadingAnchor.constraint(equalTo: titleBar.leadingAnchor, constant: 10),
-            closeButton.centerYAnchor.constraint(equalTo: titleBar.centerYAnchor),
-            closeButton.widthAnchor.constraint(equalToConstant: 24),
-            closeButton.heightAnchor.constraint(equalToConstant: 24),
-            
-            // X centered in button
-            xLabel.centerXAnchor.constraint(equalTo: closeButton.centerXAnchor),
-            xLabel.centerYAnchor.constraint(equalTo: closeButton.centerYAnchor),
-            
-            // Color picker button (right side) - larger for easier clicking
-            colorButton.trailingAnchor.constraint(equalTo: titleBar.trailingAnchor, constant: -10),
-            colorButton.centerYAnchor.constraint(equalTo: titleBar.centerYAnchor),
-            colorButton.widthAnchor.constraint(equalToConstant: 16),
-            colorButton.heightAnchor.constraint(equalToConstant: 16),
+            // Color picker button - using standard NSButton for reliability
+            let colorButton = NSButton()
+            colorButton.bezelStyle = .regularSquare
+            colorButton.isBordered = false
+            colorButton.wantsLayer = true
+            colorButton.layer?.cornerRadius = 8
+            colorButton.layer?.backgroundColor = shelfColor.cgColor
+            colorButton.layer?.borderWidth = 1
+            colorButton.layer?.borderColor = NSColor.white.withAlphaComponent(0.6).cgColor
+            colorButton.target = self
+            colorButton.action = #selector(showColorPicker)
+            colorButton.translatesAutoresizingMaskIntoConstraints = false
+            self.colorButton = colorButton  // Store reference for showColorPicker
             
             // Name field
-            field.leadingAnchor.constraint(equalTo: closeButton.trailingAnchor, constant: 8),
-            field.trailingAnchor.constraint(equalTo: colorButton.leadingAnchor, constant: -8),
-            field.centerYAnchor.constraint(equalTo: titleBar.centerYAnchor)
-        ])
+            let field = NSTextField()
+            field.stringValue = shelf.name
+            field.font = NSFont.systemFont(ofSize: 11, weight: .medium)
+            field.textColor = NSColor.white
+            field.backgroundColor = .clear
+            field.isBordered = false
+            field.isEditable = true
+            field.focusRingType = .none
+            field.alignment = .center
+            field.target = self
+            field.action = #selector(shelfNameChanged(_:))
+            field.translatesAutoresizingMaskIntoConstraints = false
+            self.nameField = field
+            
+            // Add subviews (order matters for z-index)
+            titleBar.addSubview(field)
+            titleBar.addSubview(closeButton)
+            titleBar.addSubview(colorButton) // Last = on top
+            
+            NSLayoutConstraint.activate([
+                // Close button
+                closeButton.leadingAnchor.constraint(equalTo: titleBar.leadingAnchor, constant: 10),
+                closeButton.centerYAnchor.constraint(equalTo: titleBar.centerYAnchor),
+                closeButton.widthAnchor.constraint(equalToConstant: 24),
+                closeButton.heightAnchor.constraint(equalToConstant: 24),
+                
+                // X centered in button
+                xLabel.centerXAnchor.constraint(equalTo: closeButton.centerXAnchor),
+                xLabel.centerYAnchor.constraint(equalTo: closeButton.centerYAnchor),
+                
+                // Color picker button (right side)
+                colorButton.trailingAnchor.constraint(equalTo: titleBar.trailingAnchor, constant: -10),
+                colorButton.centerYAnchor.constraint(equalTo: titleBar.centerYAnchor),
+                colorButton.widthAnchor.constraint(equalToConstant: 16),
+                colorButton.heightAnchor.constraint(equalToConstant: 16),
+                
+                // Name field
+                field.leadingAnchor.constraint(equalTo: closeButton.trailingAnchor, constant: 8),
+                field.trailingAnchor.constraint(equalTo: colorButton.leadingAnchor, constant: -8),
+                field.centerYAnchor.constraint(equalTo: titleBar.centerYAnchor)
+            ])
         
         return titleBar
     }
     
     private var colorPopover: NSPopover?
+    
+
     
     // Preset colors
     private let presetColors: [String] = [
@@ -273,72 +279,60 @@ class ShelfViewController: NSViewController {
     ]
     
     @objc private func showColorPicker() {
-        // Close existing popover
-        colorPopover?.close()
+        guard let colorButton = self.colorButton else { return }
         
-        // Create color palette view
-        let paletteView = NSView(frame: NSRect(x: 0, y: 0, width: 160, height: 80))
-        paletteView.wantsLayer = true
+        let menu = NSMenu(title: "Shelf Color")
         
-        // Create color buttons in 5x2 grid
         for (index, colorHex) in presetColors.enumerated() {
-            let row = index / 5
-            let col = index % 5
+            let color = NSColor(hex: colorHex)
+            let isCurrent = (colorHex == shelf.colorHex)
             
-            let colorButton = NSButton(frame: NSRect(
-                x: 8 + col * 30,
-                y: 42 - row * 30,
-                width: 26,
-                height: 26
-            ))
-            colorButton.bezelStyle = .regularSquare
-            colorButton.isBordered = false
-            colorButton.wantsLayer = true
-            colorButton.layer?.cornerRadius = 13
-            colorButton.layer?.backgroundColor = NSColor(hex: colorHex)?.cgColor
-            colorButton.tag = index
-            colorButton.target = self
-            colorButton.action = #selector(colorSelected(_:))
+            // Create a small circle image for the menu item
+            let size = NSSize(width: 16, height: 16)
+            let image = NSImage(size: size)
             
-            // Add border for current color
-            if colorHex == shelf.colorHex {
-                colorButton.layer?.borderWidth = 2
-                colorButton.layer?.borderColor = NSColor.white.cgColor
+            image.lockFocus()
+            
+            let path = NSBezierPath(ovalIn: NSRect(origin: .zero, size: size))
+            color?.setFill()
+            path.fill()
+            
+            if isCurrent {
+                NSColor.white.setStroke()
+                path.lineWidth = 2
+                path.stroke()
             }
             
-            paletteView.addSubview(colorButton)
+            image.unlockFocus()
+            
+            // Create menu item with image
+            let item = NSMenuItem(title: "   ", action: #selector(colorSelectedFromMenu(_:)), keyEquivalent: "")
+            item.image = image
+            item.tag = index
+            item.target = self
+            
+            // Add checkmark if selected (system standard)
+            item.state = isCurrent ? .on : .off
+            
+            menu.addItem(item)
         }
         
-        // Create popover
-        let popover = NSPopover()
-        popover.behavior = .transient
-        popover.contentSize = paletteView.bounds.size
-        
-        let viewController = NSViewController()
-        viewController.view = paletteView
-        popover.contentViewController = viewController
-        
-        // Show in top-right of screen
-        if let window = view.window {
-            let colorButtonFrame = NSRect(
-                x: window.frame.maxX - 30,
-                y: window.frame.maxY - 20,
-                width: 20,
-                height: 20
-            )
-            popover.show(relativeTo: colorButtonFrame, of: view, preferredEdge: .maxY)
-        }
-        
-        colorPopover = popover
+        // Show menu under the button
+        let location = NSPoint(x: 0, y: colorButton.bounds.height + 5)
+        menu.popUp(positioning: nil, at: location, in: colorButton)
     }
     
-    @objc private func colorSelected(_ sender: NSButton) {
+    @objc private func colorSelectedFromMenu(_ sender: NSMenuItem) {
         let colorHex = presetColors[sender.tag]
         shelf.colorHex = colorHex
         ItemStore.shared.updateShelf(shelf)
-        colorPopover?.close()
         
-        // Refresh view
+        // Update UI immediately without full rebuild if possible
+        if let newColor = NSColor(hex: colorHex) {
+            colorButton?.layer?.backgroundColor = newColor.cgColor
+        }
+        
+        // Full rebuild for other effects
         view.subviews.forEach { $0.removeFromSuperview() }
         setupUI()
     }
@@ -405,10 +399,30 @@ class ShelfViewController: NSViewController {
     override func beginPreviewPanelControl(_ panel: QLPreviewPanel!) {
         panel.delegate = self
         panel.dataSource = self
+        
+        // Monitor key events to handle space bar for closing
+        eventMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
+            if event.keyCode == 49 { // Space bar
+                self?.toggleQuickLook(panel)
+                return nil // Consume event
+            }
+            return event
+        }
     }
     
     override func endPreviewPanelControl(_ panel: QLPreviewPanel!) {
-        // Nothing to clean up
+        if let monitor = eventMonitor {
+            NSEvent.removeMonitor(monitor)
+            eventMonitor = nil
+        }
+    }
+    
+    private func toggleQuickLook(_ panel: QLPreviewPanel) {
+        if panel.isVisible {
+            panel.close()
+        } else {
+            panel.makeKeyAndOrderFront(nil)
+        }
     }
     
     // MARK: - Data

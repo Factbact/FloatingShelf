@@ -87,10 +87,38 @@ class ShelfWindowController: NSWindowController {
             return CGPoint(x: 100, y: 100)
         }
         
-        // Top-right corner of screen
         let screenRect = screen.visibleFrame
-        let x = screenRect.maxX - Constants.defaultShelfWidth - 20
-        let y = screenRect.maxY - Constants.defaultShelfHeight - 20
+        let cascadeOffset: CGFloat = 40
+        
+        // Default position: top-right corner
+        var x = screenRect.maxX - Constants.defaultShelfWidth - 20
+        var y = screenRect.maxY - Constants.defaultShelfHeight - 20
+        
+        // Find the most recently created active shelf
+        // Iterate over keys (Shelf IDs) to find the latest shelf
+        let sortedActiveShelves = activeShelves.keys.compactMap { id -> (Date, NSWindow)? in
+            guard let shelf = ItemStore.shared.fetchShelf(by: id),
+                  let window = activeShelves[id]?.window else { return nil }
+            return (shelf.createdAt, window)
+        }.sorted { $0.0 < $1.0 } // Sort by date ascending
+        
+        if let (_, lastWindow) = sortedActiveShelves.last {
+            let lastFrame = lastWindow.frame
+            
+            // Offset down and to the left
+            x = lastFrame.origin.x - cascadeOffset
+            y = lastFrame.origin.y - cascadeOffset
+            
+            // Reset if off-screen (left edge)
+            if x < screenRect.minX + 50 {
+                x = screenRect.maxX - Constants.defaultShelfWidth - 20
+            }
+            
+            // Reset if off-screen (bottom edge)
+            if y < screenRect.minY + 50 {
+                y = screenRect.maxY - Constants.defaultShelfHeight - 20
+            }
+        }
         
         return CGPoint(x: x, y: y)
     }
