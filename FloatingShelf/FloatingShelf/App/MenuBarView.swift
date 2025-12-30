@@ -61,7 +61,12 @@ class MenuBarView: NSView {
     // MARK: - Mouse Events
     
     override func mouseDown(with event: NSEvent) {
-        // Show menu on click
+        // Left click -> Show Recent Shelves (Dropover style)
+        showRecentShelvesPopover()
+    }
+    
+    override func rightMouseDown(with event: NSEvent) {
+        // Right click -> Show context menu
         showMenu()
     }
     

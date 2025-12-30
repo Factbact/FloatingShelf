@@ -47,6 +47,10 @@ class DropReceiver: NSObject {
         return draggingEntered(sender)
     }
     
+    func draggingExited(_ sender: NSDraggingInfo?) {
+        // Optional cleanup if needed (e.g. notify delegate)
+    }
+    
     func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
         let pasteboard = sender.draggingPasteboard
         

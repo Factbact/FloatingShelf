@@ -21,6 +21,9 @@ class ShelfGridView: NSView {
     private let collectionView = NSCollectionView()
     private let emptyLabel = NSTextField(labelWithString: "Drop files here")
     
+    // Drag & Drop
+    var dropReceiver: DropReceiver?
+    
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
         setupUI()
@@ -33,7 +36,7 @@ class ShelfGridView: NSView {
     
     private func setupUI() {
         wantsLayer = true
-        layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
+        layer?.backgroundColor = NSColor.clear.cgColor  // Transparent for vibrancy
         
         // Empty state label
         emptyLabel.alignment = .center
@@ -104,6 +107,30 @@ class ShelfGridView: NSView {
     @objc func deleteSelectedItems() {
         guard !selectedItems.isEmpty else { return }
         delegate?.gridView(self, didDeleteItems: selectedItems)
+    }
+    
+    func registerDropTypes(_ types: [NSPasteboard.PasteboardType]) {
+        registerForDraggedTypes(types)
+        scrollView.registerForDraggedTypes(types)
+        collectionView.registerForDraggedTypes(types)
+    }
+    
+    // MARK: - Dragging Destination
+    
+    override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
+        return dropReceiver?.draggingEntered(sender) ?? []
+    }
+    
+    override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
+        return dropReceiver?.draggingUpdated(sender) ?? []
+    }
+    
+    override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
+        return dropReceiver?.performDragOperation(sender) ?? false
+    }
+    
+    override func draggingExited(_ sender: NSDraggingInfo?) {
+        dropReceiver?.draggingExited(sender)
     }
     
     // MARK: - Key Events

@@ -12,6 +12,7 @@ class ShelfViewController: NSViewController {
     private var gridView: ShelfGridView!
     private var actionBar: ActionBarView!
     private var dropReceiver: DropReceiver!
+    private var nameField: NSTextField?  // Changed to optional to prevent crash
     
     private var items: [ShelfItem] = []
     private var selectedItems: Set<UUID> = []
@@ -45,9 +46,18 @@ class ShelfViewController: NSViewController {
             dropView.dropReceiver = dropReceiver
             dropView.registerForDraggedTypes(dropReceiver.acceptedTypes)
         }
+        // Connect gridView to dropReceiver and register drag types
+        gridView.dropReceiver = dropReceiver
+        gridView.registerDropTypes(dropReceiver.acceptedTypes)
     }
     
-    // MARK: - Keyboard Events
+    override func viewDidAppear() {
+        super.viewDidAppear()
+        // Note: Auto-focus removed because it caused crashes.
+        // User can click on name field to edit.
+    }
+    
+    // MARK: - Event Handling
     
     override func keyDown(with event: NSEvent) {
         // Space bar = Quick Look
@@ -63,7 +73,34 @@ class ShelfViewController: NSViewController {
     // MARK: - UI Setup
     
     private func setupUI() {
-        // Grid view for items (add first, so it's at bottom)
+        // Ensure DropView itself is transparent BUT masks bounds for corner radius
+        view.wantsLayer = true
+        view.layer?.backgroundColor = NSColor.clear.cgColor
+        view.layer?.cornerRadius = 20
+        view.layer?.cornerCurve = .continuous
+        view.layer?.masksToBounds = true
+        
+        // Vibrancy background (add FIRST, at the bottom of z-order)
+        let vibrancyView = NSVisualEffectView()
+        vibrancyView.material = .hudWindow
+        vibrancyView.blendingMode = .withinWindow
+        vibrancyView.state = .active
+        vibrancyView.isEmphasized = true
+        vibrancyView.wantsLayer = true
+        vibrancyView.layer?.cornerRadius = 20
+        vibrancyView.layer?.cornerCurve = .continuous
+        vibrancyView.layer?.masksToBounds = true
+        vibrancyView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(vibrancyView)
+        
+        NSLayoutConstraint.activate([
+            vibrancyView.topAnchor.constraint(equalTo: view.topAnchor),
+            vibrancyView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            vibrancyView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            vibrancyView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        
+        // Grid view for items
         gridView = ShelfGridView()
         gridView.translatesAutoresizingMaskIntoConstraints = false
         gridView.delegate = self
@@ -138,6 +175,10 @@ class ShelfViewController: NSViewController {
         let shelfColor = NSColor(hex: shelf.colorHex) ?? NSColor.systemBlue
         titleBar.layer?.backgroundColor = shelfColor.withAlphaComponent(0.9).cgColor
         
+        // Round only top corners
+        titleBar.layer?.cornerRadius = 20
+        titleBar.layer?.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        
         // Close button - macOS style red circle
         let closeButton = NSButton()
         closeButton.bezelStyle = .regularSquare
@@ -170,21 +211,22 @@ class ShelfViewController: NSViewController {
         colorButton.addGestureRecognizer(clickGesture)
         
         // Shelf name label (editable)
-        let nameField = NSTextField()
-        nameField.stringValue = shelf.name
-        nameField.font = NSFont.systemFont(ofSize: 11, weight: .medium)
-        nameField.textColor = NSColor.white
-        nameField.backgroundColor = .clear
-        nameField.isBordered = false
-        nameField.isEditable = true
-        nameField.focusRingType = .none
-        nameField.alignment = .center
-        nameField.target = self
-        nameField.action = #selector(shelfNameChanged(_:))
-        nameField.translatesAutoresizingMaskIntoConstraints = false
+        let field = NSTextField()
+        field.stringValue = shelf.name
+        field.font = NSFont.systemFont(ofSize: 11, weight: .medium)
+        field.textColor = NSColor.white
+        field.backgroundColor = .clear
+        field.isBordered = false
+        field.isEditable = true
+        field.focusRingType = .none
+        field.alignment = .center
+        field.target = self
+        field.action = #selector(shelfNameChanged(_:))
+        field.translatesAutoresizingMaskIntoConstraints = false
+        self.nameField = field
         
         // Add subviews (order matters for z-index)
-        titleBar.addSubview(nameField)
+        titleBar.addSubview(field)
         titleBar.addSubview(closeButton)
         titleBar.addSubview(colorButton) // Last = on top
         
@@ -206,9 +248,9 @@ class ShelfViewController: NSViewController {
             colorButton.heightAnchor.constraint(equalToConstant: 16),
             
             // Name field
-            nameField.leadingAnchor.constraint(equalTo: closeButton.trailingAnchor, constant: 8),
-            nameField.trailingAnchor.constraint(equalTo: colorButton.leadingAnchor, constant: -8),
-            nameField.centerYAnchor.constraint(equalTo: titleBar.centerYAnchor)
+            field.leadingAnchor.constraint(equalTo: closeButton.trailingAnchor, constant: 8),
+            field.trailingAnchor.constraint(equalTo: colorButton.leadingAnchor, constant: -8),
+            field.centerYAnchor.constraint(equalTo: titleBar.centerYAnchor)
         ])
         
         return titleBar
@@ -415,6 +457,21 @@ class ShelfViewController: NSViewController {
 
 extension ShelfViewController: DropReceiverDelegate {
     func dropReceiver(_ receiver: DropReceiver, didReceiveItems newItems: [ShelfItem]) {
+        // Auto-name shelf from first file if shelf is still empty and has default name
+        if items.isEmpty, !newItems.isEmpty {
+            if let firstItem = newItems.first {
+                // Use file name (without extension) as shelf name
+                let fileName = firstItem.displayName
+                let nameWithoutExt = (fileName as NSString).deletingPathExtension
+                if !nameWithoutExt.isEmpty && shelf.name == "New Shelf" {
+                    shelf.name = nameWithoutExt
+                    ItemStore.shared.updateShelf(shelf)
+                    // Update UI
+                    nameField?.stringValue = nameWithoutExt
+                }
+            }
+        }
+        
         items.append(contentsOf: newItems)
         gridView.reloadData(with: items)
         checkAutoHide() // Cancel auto-hide if items were added

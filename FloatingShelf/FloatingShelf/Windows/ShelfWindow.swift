@@ -51,7 +51,7 @@ class ShelfWindow: NSPanel {
             contentView.layer?.cornerRadius = 20
             contentView.layer?.cornerCurve = .continuous
             contentView.layer?.masksToBounds = true
-            contentView.layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
+            contentView.layer?.backgroundColor = NSColor.clear.cgColor
         }
         
         // Make movable by background

@@ -47,6 +47,29 @@ class RecentShelvesPopover: NSViewController {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
         
+        // Footer
+        let separator = NSBox()
+        separator.boxType = .separator
+        separator.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(separator)
+        
+        let footerStack = NSStackView()
+        footerStack.orientation = .horizontal
+        footerStack.distribution = .equalSpacing
+        footerStack.spacing = 16
+        footerStack.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(footerStack)
+        
+        // Footer buttons
+        let newShelfButton = createButton(icon: "plus", tooltip: "New Shelf", action: #selector(newShelfAction))
+        let settingsButton = createButton(icon: "gearshape", tooltip: "Settings", action: #selector(settingsAction))
+        let quitButton = createButton(icon: "power", tooltip: "Quit", action: #selector(quitAction))
+        
+        footerStack.addArrangedSubview(newShelfButton)
+        footerStack.addArrangedSubview(settingsButton)
+        footerStack.addArrangedSubview(quitButton)
+        
+        // Layout constraints - FIXED: proper constraint chain
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 12),
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 12),
@@ -55,10 +78,53 @@ class RecentShelvesPopover: NSViewController {
             scrollView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: separator.topAnchor), // FIXED!
             
-            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+            stackView.topAnchor.constraint(equalTo: scrollView.contentView.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.contentView.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.contentView.trailingAnchor),
+            
+            separator.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            separator.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            separator.heightAnchor.constraint(equalToConstant: 1),
+            
+            footerStack.topAnchor.constraint(equalTo: separator.bottomAnchor, constant: 8),
+            footerStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            footerStack.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -8),
+            footerStack.heightAnchor.constraint(equalToConstant: 24)
         ])
+    }
+    
+    private func createButton(icon: String, tooltip: String, action: Selector) -> NSButton {
+        let button = NSButton()
+        button.image = NSImage(systemSymbolName: icon, accessibilityDescription: tooltip)
+        button.target = self
+        button.action = action
+        button.bezelStyle = .texturedRounded
+        button.isBordered = false
+        button.toolTip = tooltip
+        button.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            button.widthAnchor.constraint(equalToConstant: 24),
+            button.heightAnchor.constraint(equalToConstant: 24)
+        ])
+        return button
+    }
+    
+    // MARK: - Actions
+    
+    @objc private func newShelfAction() {
+        appDelegate?.createNewShelf()
+        dismiss(nil)
+    }
+    
+    @objc private func settingsAction() {
+        SettingsWindowController.shared.show()
+        dismiss(nil)
+    }
+    
+    @objc private func quitAction() {
+        NSApplication.shared.terminate(nil)
     }
     
     private func loadShelves() {
@@ -81,18 +147,10 @@ class RecentShelvesPopover: NSViewController {
     }
     
     private func createShelfItemView(_ shelf: Shelf) -> NSView {
-        let container = NSView()
+        let container = ShelfItemContainer()
         container.wantsLayer = true
+        container.shelfId = shelf.id
         container.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Hover effect
-        let trackingArea = NSTrackingArea(
-            rect: .zero,
-            options: [.mouseEnteredAndExited, .activeInKeyWindow, .inVisibleRect],
-            owner: container,
-            userInfo: ["shelfId": shelf.id]
-        )
-        container.addTrackingArea(trackingArea)
         
         // Thumbnail stack (horizontal, shows up to 3 items)
         let thumbnailStack = NSStackView()
@@ -127,6 +185,19 @@ class RecentShelvesPopover: NSViewController {
             thumbnailStack.addArrangedSubview(imageView)
         }
         
+        // Placeholder for empty shelf
+        if displayItems.isEmpty {
+            let placeholder = NSImageView()
+            placeholder.image = NSImage(systemSymbolName: "folder", accessibilityDescription: "Empty")
+            placeholder.contentTintColor = .secondaryLabelColor
+            placeholder.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                placeholder.widthAnchor.constraint(equalToConstant: 40),
+                placeholder.heightAnchor.constraint(equalToConstant: 40)
+            ])
+            thumbnailStack.addArrangedSubview(placeholder)
+        }
+        
         // Name and count label
         let textStack = NSStackView()
         textStack.orientation = .vertical
@@ -135,12 +206,13 @@ class RecentShelvesPopover: NSViewController {
         textStack.translatesAutoresizingMaskIntoConstraints = false
         
         let nameLabel = NSTextField(labelWithString: shelf.name)
-        nameLabel.font = NSFont.systemFont(ofSize: 12, weight: .medium)
+        nameLabel.font = NSFont.systemFont(ofSize: 13, weight: .medium)
         nameLabel.textColor = .labelColor
         nameLabel.lineBreakMode = .byTruncatingTail
+        nameLabel.maximumNumberOfLines = 1
         
         let countLabel = NSTextField(labelWithString: "\(items.count) items")
-        countLabel.font = NSFont.systemFont(ofSize: 10)
+        countLabel.font = NSFont.systemFont(ofSize: 11)
         countLabel.textColor = .secondaryLabelColor
         
         textStack.addArrangedSubview(nameLabel)
@@ -152,7 +224,6 @@ class RecentShelvesPopover: NSViewController {
         // Click gesture
         let clickGesture = NSClickGestureRecognizer(target: self, action: #selector(shelfItemClicked(_:)))
         container.addGestureRecognizer(clickGesture)
-        container.setValue(shelf.id, forKey: "shelfId")
         
         NSLayoutConstraint.activate([
             container.heightAnchor.constraint(equalToConstant: 56),
@@ -169,8 +240,8 @@ class RecentShelvesPopover: NSViewController {
     }
     
     @objc private func shelfItemClicked(_ gesture: NSClickGestureRecognizer) {
-        guard let container = gesture.view,
-              let shelfId = container.value(forKey: "shelfId") as? UUID else { return }
+        guard let container = gesture.view as? ShelfItemContainer,
+              let shelfId = container.shelfId else { return }
         
         appDelegate?.openShelf(shelfId)
         dismiss(nil)
@@ -181,8 +252,19 @@ class RecentShelvesPopover: NSViewController {
 class ShelfItemContainer: NSView {
     var shelfId: UUID?
     
+    override func updateTrackingAreas() {
+        super.updateTrackingAreas()
+        trackingAreas.forEach { removeTrackingArea($0) }
+        addTrackingArea(NSTrackingArea(
+            rect: bounds,
+            options: [.mouseEnteredAndExited, .activeAlways],
+            owner: self,
+            userInfo: nil
+        ))
+    }
+    
     override func mouseEntered(with event: NSEvent) {
-        layer?.backgroundColor = NSColor.selectedContentBackgroundColor.withAlphaComponent(0.3).cgColor
+        layer?.backgroundColor = NSColor.selectedContentBackgroundColor.withAlphaComponent(0.2).cgColor
     }
     
     override func mouseExited(with event: NSEvent) {
