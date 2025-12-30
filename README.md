@@ -8,11 +8,12 @@ A lightweight macOS utility for quick file management. Drag files to a floating 
 
 - 🗂️ **Floating Shelf**: Compact 200×200 window stays on top
 - 📁 **Drag & Drop**: Drop files onto menu bar icon or shelf window
-- 📋 **Recent Shelves**: Quick access to last 5 shelves
+- 📋 **Recent Shelves**: Quick access to last 5 shelves (left-click menu bar)
 - ✏️ **Auto-naming**: Shelf named after first file
 - 🎯 **Quick Actions**: Share, AirDrop, Copy, Save, Delete with one click
 - 💾 **Persistent Storage**: Files saved via Core Data
-- 🎨 **Dropover-style UI**: Modern rounded corners, minimal title bar, hover action bar
+- 🎨 **Color Customization**: Choose from 10 preset colors for each shelf
+- 🪟 **Cascading Windows**: New shelves appear offset from existing ones
 - ✈️ **AirDrop Sharing**: One-click AirDrop for selected files
 - ⚙️ **Auto-hide Settings**: Configure auto-hide delay in Settings
 
@@ -36,7 +37,8 @@ A lightweight macOS utility for quick file management. Drag files to a floating 
 | Add files | Drag to menu bar icon or shelf window |
 | Remove files | Select → Click 🗑️ |
 | Rename shelf | Click name in title bar |
-| Close shelf | Click red ● button |
+| Change color | Click color dot → Select from menu |
+| Close shelf | Click ✕ button |
 
 ## Requirements
 
