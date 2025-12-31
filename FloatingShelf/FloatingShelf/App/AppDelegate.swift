@@ -66,14 +66,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         appMenuItem.submenu = appMenu
         mainMenu.addItem(appMenuItem)
         
-        // File menu (for Cmd+W)
+        // File menu (for Cmd+W, Cmd+N)
         let fileMenuItem = NSMenuItem()
         let fileMenu = NSMenu(title: "File")
         fileMenu.addItem(withTitle: L(.newShelf), action: #selector(createNewShelf), keyEquivalent: "n")
         fileMenu.addItem(NSMenuItem.separator())
-        let closeItem = NSMenuItem(title: "Close Window", action: #selector(closeKeyWindow), keyEquivalent: "w")
-        closeItem.target = self
-        fileMenu.addItem(closeItem)
+        // Use performClose: which uses responder chain - works with any window
+        fileMenu.addItem(withTitle: "Close Window", action: #selector(NSWindow.performClose(_:)), keyEquivalent: "w")
         fileMenuItem.submenu = fileMenu
         mainMenu.addItem(fileMenuItem)
         
@@ -88,10 +87,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         mainMenu.addItem(editMenuItem)
         
         NSApp.mainMenu = mainMenu
-    }
-    
-    @objc private func closeKeyWindow() {
-        NSApp.keyWindow?.close()
     }
     
     @objc private func openSettings() {
