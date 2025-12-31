@@ -14,6 +14,14 @@ protocol ActionBarDelegate: AnyObject {
     func actionBarDidRequestDelete(_ actionBar: ActionBarView)
     func actionBarDidRequestZip(_ actionBar: ActionBarView)
     func actionBarDidRequestSelectAll(_ actionBar: ActionBarView)
+    func actionBarDidRequestSort(_ actionBar: ActionBarView, by sortType: SortType)
+}
+
+enum SortType {
+    case nameAscending
+    case nameDescending
+    case dateNewest
+    case dateOldest
 }
 
 class ActionBarView: NSView {
@@ -28,6 +36,7 @@ class ActionBarView: NSView {
     private var deleteButton: NSButton!
     private var zipButton: NSButton!
     private var selectAllButton: NSButton!
+    private var sortButton: NSButton!
     
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
@@ -76,8 +85,28 @@ class ActionBarView: NSView {
                                            tooltip: "Select All",
                                            action: #selector(selectAllAction))
         
-        // Stack view for compact button layout
-        let stackView = NSStackView(views: [selectAllButton, shareButton, airDropButton, copyButton, pasteButton, saveButton, zipButton, deleteButton])
+        sortButton = createIconButton(icon: "arrow.up.arrow.down",
+                                      tooltip: "Sort",
+                                      action: #selector(sortAction))
+        
+        // Map button IDs to buttons
+        let buttonMap: [String: NSButton] = [
+            "selectAll": selectAllButton,
+            "sort": sortButton,
+            "share": shareButton,
+            "airdrop": airDropButton,
+            "copy": copyButton,
+            "paste": pasteButton,
+            "save": saveButton,
+            "zip": zipButton,
+            "delete": deleteButton
+        ]
+        
+        // Build stack view with only visible buttons
+        let visibleIds = SettingsManager.shared.visibleActionButtons
+        let visibleButtons = visibleIds.compactMap { buttonMap[$0] }
+        
+        let stackView = NSStackView(views: visibleButtons.isEmpty ? [selectAllButton, deleteButton] : visibleButtons)
         stackView.orientation = .horizontal
         stackView.distribution = .fillEqually
         stackView.spacing = 4
@@ -157,4 +186,34 @@ class ActionBarView: NSView {
     @objc private func selectAllAction() {
         delegate?.actionBarDidRequestSelectAll(self)
     }
+    
+    @objc private func sortAction() {
+        let menu = NSMenu()
+        
+        let nameAscItem = NSMenuItem(title: "名前 A→Z", action: #selector(sortNameAsc), keyEquivalent: "")
+        nameAscItem.target = self
+        menu.addItem(nameAscItem)
+        
+        let nameDescItem = NSMenuItem(title: "名前 Z→A", action: #selector(sortNameDesc), keyEquivalent: "")
+        nameDescItem.target = self
+        menu.addItem(nameDescItem)
+        
+        menu.addItem(NSMenuItem.separator())
+        
+        let dateNewItem = NSMenuItem(title: "日付 新しい順", action: #selector(sortDateNew), keyEquivalent: "")
+        dateNewItem.target = self
+        menu.addItem(dateNewItem)
+        
+        let dateOldItem = NSMenuItem(title: "日付 古い順", action: #selector(sortDateOld), keyEquivalent: "")
+        dateOldItem.target = self
+        menu.addItem(dateOldItem)
+        
+        let location = NSPoint(x: sortButton.frame.midX, y: sortButton.frame.maxY)
+        menu.popUp(positioning: nil, at: location, in: self)
+    }
+    
+    @objc private func sortNameAsc() { delegate?.actionBarDidRequestSort(self, by: .nameAscending) }
+    @objc private func sortNameDesc() { delegate?.actionBarDidRequestSort(self, by: .nameDescending) }
+    @objc private func sortDateNew() { delegate?.actionBarDidRequestSort(self, by: .dateNewest) }
+    @objc private func sortDateOld() { delegate?.actionBarDidRequestSort(self, by: .dateOldest) }
 }

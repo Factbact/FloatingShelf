@@ -1,9 +1,5 @@
-//
-//  SettingsManager.swift
-//  FloatingShelf
-//
-
 import Foundation
+import ServiceManagement
 
 class SettingsManager {
     static let shared = SettingsManager()
@@ -49,7 +45,33 @@ class SettingsManager {
     /// Launch at login (default: false)
     var launchAtLogin: Bool {
         get { defaults.bool(forKey: Keys.launchAtLogin) }
-        set { defaults.set(newValue, forKey: Keys.launchAtLogin) }
+        set {
+            defaults.set(newValue, forKey: Keys.launchAtLogin)
+            updateLoginItem(enabled: newValue)
+        }
+    }
+    
+    /// Check if login item is currently enabled
+    var isLaunchAtLoginEnabled: Bool {
+        if #available(macOS 13.0, *) {
+            return SMAppService.mainApp.status == .enabled
+        } else {
+            return defaults.bool(forKey: Keys.launchAtLogin)
+        }
+    }
+    
+    private func updateLoginItem(enabled: Bool) {
+        if #available(macOS 13.0, *) {
+            do {
+                if enabled {
+                    try SMAppService.mainApp.register()
+                } else {
+                    try SMAppService.mainApp.unregister()
+                }
+            } catch {
+                print("Failed to update login item: \(error)")
+            }
+        }
     }
     
     // MARK: - ZIP Settings
@@ -60,6 +82,17 @@ class SettingsManager {
         set { defaults.set(newValue, forKey: Keys.zipSaveLocation) }
     }
     
+    // MARK: - Action Bar Settings
+    
+    /// Available button identifiers
+    static let allButtonIds = ["selectAll", "sort", "share", "airdrop", "copy", "paste", "save", "zip", "delete"]
+    
+    /// Visible action bar buttons (default: selectAll, sort, share, paste, delete)
+    var visibleActionButtons: [String] {
+        get { defaults.stringArray(forKey: "visibleActionButtons") ?? ["selectAll", "sort", "share", "paste", "delete"] }
+        set { defaults.set(newValue, forKey: "visibleActionButtons") }
+    }
+    
     private init() {
         // Register defaults
         defaults.register(defaults: [
@@ -67,7 +100,8 @@ class SettingsManager {
             Keys.autoHideDelay: 5.0,
             Keys.defaultShelfColor: "#4A90D9",
             Keys.launchAtLogin: false,
-            Keys.zipSaveLocation: "downloads"
+            Keys.zipSaveLocation: "downloads",
+            "visibleActionButtons": ["selectAll", "sort", "share", "paste", "delete"]
         ])
     }
 }

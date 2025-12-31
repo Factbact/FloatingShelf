@@ -6,18 +6,25 @@ A lightweight macOS utility for quick file management. Drag files to a floating 
 
 ## Features
 
-- 🗂️ **Floating Shelf**: Compact 200×200 window stays on top
+### Core
+- 🗂️ **Floating Shelf**: Compact window stays on top
 - 📁 **Drag & Drop**: Drop files onto menu bar icon or shelf window
-- 📋 **Recent Shelves**: Quick access to last 5 shelves (left-click menu bar)
+- 📋 **Recent Shelves**: Quick access to last 5 shelves
 - ✏️ **Auto-naming**: Shelf named after first file
-- 🎯 **Quick Actions**: Share, AirDrop, Copy, Save, Delete with one click
 - 💾 **Persistent Storage**: Files saved via Core Data
-- 🎨 **Color Customization**: Choose from 10 preset colors for each shelf
-- 🪟 **Cascading Windows**: New shelves appear offset from existing ones
-- ✈️ **AirDrop Sharing**: One-click AirDrop for selected files
+
+### Actions
+- 🎯 **Action Bar**: Customizable buttons (Share, AirDrop, Copy, Paste, Save, ZIP, Delete, Sort)
+- ⌨️ **Keyboard Shortcuts**: Delete (⌫), Open (↵), Select All (⌘A), Quick Look (Space)
 - 📦 **ZIP Compression**: Bundle selected files into a ZIP archive
+- ✈️ **AirDrop Sharing**: One-click AirDrop for selected files
 - 🔗 **URL Support**: Drag URLs from browser to save as bookmarks
-- ⚙️ **Settings**: Configure auto-hide, default color, ZIP save location
+
+### UI & Settings
+- 🎨 **Color Customization**: Choose from 10 preset colors
+- ⚙️ **Settings**: Auto-hide, default color, ZIP location, launch at login
+- 🔘 **Customizable Action Bar**: Show/hide buttons in settings
+- ↕️ **Sort Options**: Sort by name (A-Z, Z-A) or date (newest, oldest)
 
 ## Installation
 
@@ -29,25 +36,36 @@ A lightweight macOS utility for quick file management. Drag files to a floating 
 ### Pre-built App
 1. Download `FloatingShelf.app` from Releases
 2. Move to `/Applications`
-3. Right-click → Open (first time only, to bypass Gatekeeper)
+3. Right-click → Open (first time only)
 
 ## Usage
 
 | Action | How |
 |--------|-----|
-| Create shelf | Click menu bar icon → New Shelf, or press `⌥⌘Space` |
-| Add files | Drag to menu bar icon or shelf window |
-| Add URL | Drag URL from browser to shelf |
-| Create ZIP | Select files → Click 📦 button |
-| Remove files | Select → Click 🗑️ |
+| Create shelf | Menu bar → New Shelf, or `⌥⌘Space` |
+| Add files | Drag to shelf window |
+| Select all | `⌘A` |
+| Delete files | Select → `⌫` or click 🗑️ |
+| Open files | Select → `↵` or double-click |
+| Quick Look | Select → `Space` |
+| Sort files | Click ↑↓ button |
 | Rename shelf | Click name in title bar |
-| Change color | Click color dot → Select from menu |
-| Close shelf | Click ✕ button |
+| Change color | Click color dot → Select |
 
 ## Requirements
 
 - macOS 12.0+
 - Xcode 14+ (for building)
+
+## Changelog
+
+### v1.8.0 (2024-12-31)
+- 🐛 **Bug Fix**: Fixed critical drag & drop bug where adding files to non-empty shelf failed
+- ✨ **Customizable Action Bar**: Choose which buttons to show in Settings
+- ↕️ **Sort**: Sort items by name or date
+- ⌨️ **Keyboard Shortcuts**: Delete, Enter, Cmd+A support
+- 🚀 **Launch at Login**: Option in Settings
+- 🎨 **Improved Settings UI**: Card-based layout with Japanese labels
 
 ## License
 
@@ -57,23 +75,31 @@ MIT License
 
 # FloatingShelf（日本語）
 
-ファイル管理を効率化するmacOS用軽量ユーティリティ。ファイルをフローティングシェルフにドラッグして整理し、任意のアプリにドラッグアウトできます。
+ファイル管理を効率化するmacOS用軽量ユーティリティ。
 
 ---
 
 ## 機能
 
-- 🗂️ **フローティングシェルフ**: 200×200のコンパクトウィンドウが常に前面に
-- 📁 **ドラッグ＆ドロップ**: メニューバーアイコンまたはシェルフウィンドウにドロップ
+### コア機能
+- 🗂️ **フローティングシェルフ**: 常に前面に表示されるコンパクトウィンドウ
+- 📁 **ドラッグ＆ドロップ**: シェルフにファイルをドロップ
 - 📋 **最近のシェルフ**: 過去5つのシェルフにクイックアクセス
 - ✏️ **自動命名**: 最初のファイル名でシェルフを命名
-- 🎯 **クイックアクション**: 共有、AirDrop、コピー、保存、削除をワンクリック
 - 💾 **永続ストレージ**: Core Dataでファイルを保存
-- 🎨 **カラーカスタマイズ**: 10種のプリセットカラーから選択
+
+### アクション
+- 🎯 **アクションバー**: カスタマイズ可能なボタン（共有、AirDrop、コピー、ペースト、保存、ZIP、削除、並替）
+- ⌨️ **キーボードショートカット**: 削除(⌫)、開く(↵)、全選択(⌘A)、クイックルック(Space)
 - 📦 **ZIP圧縮**: 選択ファイルをZIPにまとめる
+- ✈️ **AirDrop共有**: ワンクリックでAirDrop
 - 🔗 **URL対応**: ブラウザからURLをドラッグして保存
-- ✈️ **AirDrop共有**: 選択ファイルをワンクリックでAirDrop
-- ⚙️ **設定**: 自動非表示、デフォルトカラー、ZIP保存先を設定可能
+
+### UI・設定
+- 🎨 **カラーカスタマイズ**: 10種のプリセットカラー
+- ⚙️ **設定**: 自動非表示、デフォルトカラー、ZIP保存先、ログイン時起動
+- 🔘 **アクションバーカスタマイズ**: 設定で表示ボタンを選択
+- ↕️ **並べ替え**: 名前順・日付順でソート
 
 ## インストール
 
@@ -85,22 +111,34 @@ MIT License
 ### ビルド済みアプリ
 1. Releasesから`FloatingShelf.app`をダウンロード
 2. `/Applications`に移動
-3. 右クリック→「開く」（初回のみ、Gatekeeperバイパスのため）
+3. 右クリック→「開く」（初回のみ）
 
 ## 使い方
 
 | アクション | 方法 |
 |-----------|------|
 | シェルフ作成 | メニューバー→New Shelf、または`⌥⌘Space` |
-| ファイル追加 | メニューバーまたはシェルフにドラッグ |
-| ファイル削除 | 選択→🗑️クリック |
-| シェルフ名変更 | タイトルバーの名前をクリック |
-| シェルフを閉じる | 赤い●ボタンをクリック |
+| ファイル追加 | シェルフにドラッグ |
+| 全選択 | `⌘A` |
+| ファイル削除 | 選択→`⌫`または🗑️クリック |
+| ファイルを開く | 選択→`↵`またはダブルクリック |
+| クイックルック | 選択→`Space` |
+| 並べ替え | ↑↓ボタンをクリック |
 
 ## 動作環境
 
 - macOS 12.0以上
 - Xcode 14以上（ビルド時）
+
+## 更新履歴
+
+### v1.8.0 (2024-12-31)
+- 🐛 **バグ修正**: 既存ファイルがあるシェルフにファイル追加できない問題を修正
+- ✨ **アクションバーカスタマイズ**: 設定で表示ボタンを選択可能に
+- ↕️ **並べ替え**: 名前順・日付順でソート
+- ⌨️ **キーボードショートカット**: Delete、Enter、Cmd+A対応
+- 🚀 **ログイン時起動**: 設定で有効化可能
+- 🎨 **設定UI改善**: カード形式のレイアウトに刷新
 
 ## ライセンス
 

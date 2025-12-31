@@ -51,9 +51,8 @@ class ShelfViewController: NSViewController {
             dropView.dropReceiver = dropReceiver
             dropView.registerForDraggedTypes(dropReceiver.acceptedTypes)
         }
-        // Connect gridView to dropReceiver and register drag types
-        gridView.dropReceiver = dropReceiver
-        gridView.registerDropTypes(dropReceiver.acceptedTypes)
+        // Note: Do NOT register drag types on gridView or its subviews
+        // DropView (parent) handles all drags to ensure events are not intercepted
     }
     
     override func viewDidAppear() {
@@ -177,8 +176,10 @@ class ShelfViewController: NSViewController {
             actionBar.animator().alphaValue = 1
         }
         
-        // Auto-expand if items exist
-        if !items.isEmpty && !isExpanded {
+        // Auto-expand if items exist, but NOT during a drag operation
+        // (window resize during drag causes kDragIPCLeaveApplication which cancels the drop)
+        let isDragging = (view as? DropView)?.isDragging ?? false
+        if !items.isEmpty && !isExpanded && !isDragging {
             toggleExpand()
         }
     }
@@ -596,6 +597,14 @@ extension ShelfViewController: DropReceiverDelegate {
         items.append(contentsOf: newItems)
         gridView.reloadData(with: items)
         checkAutoHide() // Cancel auto-hide if items were added
+        
+        // Auto-expand after drop to show newly added items
+        if !isExpanded && !items.isEmpty {
+            // Small delay to let the drop complete before resizing
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+                self?.toggleExpand()
+            }
+        }
     }
     
     func dropReceiver(_ receiver: DropReceiver, didFailWithError error: Error) {
@@ -662,6 +671,20 @@ extension ShelfViewController: ActionBarDelegate {
     
     func actionBarDidRequestSelectAll(_ actionBar: ActionBarView) {
         selectAllItems()
+    }
+    
+    func actionBarDidRequestSort(_ actionBar: ActionBarView, by sortType: SortType) {
+        switch sortType {
+        case .nameAscending:
+            items.sort { $0.displayName.localizedCaseInsensitiveCompare($1.displayName) == .orderedAscending }
+        case .nameDescending:
+            items.sort { $0.displayName.localizedCaseInsensitiveCompare($1.displayName) == .orderedDescending }
+        case .dateNewest:
+            items.sort { $0.createdAt > $1.createdAt }
+        case .dateOldest:
+            items.sort { $0.createdAt < $1.createdAt }
+        }
+        gridView.reloadData(with: items)
     }
     
     // MARK: - ZIP Implementation
@@ -868,6 +891,7 @@ extension ShelfViewController: ActionBarDelegate {
 class DropView: NSView {
     
     var dropReceiver: DropReceiver?
+    var isDragging: Bool = false  // Track if a drag operation is active
     
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
@@ -880,15 +904,28 @@ class DropView: NSView {
     }
     
     override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
-        return dropReceiver?.draggingEntered(sender) ?? []
+        isDragging = true
+        print("[DropView] draggingEntered - isDragging set to true")
+        let result = dropReceiver?.draggingEntered(sender) ?? []
+        return result
     }
     
     override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
         return dropReceiver?.draggingUpdated(sender) ?? []
     }
     
+    override func draggingExited(_ sender: NSDraggingInfo?) {
+        isDragging = false
+        print("[DropView] draggingExited - isDragging set to false")
+        dropReceiver?.draggingExited(sender)
+    }
+    
     override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
-        return dropReceiver?.performDragOperation(sender) ?? false
+        print("[DropView] performDragOperation called")
+        let result = dropReceiver?.performDragOperation(sender) ?? false
+        isDragging = false
+        print("[DropView] performDragOperation completed - isDragging set to false")
+        return result
     }
 }
 

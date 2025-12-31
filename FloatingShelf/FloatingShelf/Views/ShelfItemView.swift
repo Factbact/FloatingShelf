@@ -92,6 +92,10 @@ class ShelfItemView: NSView {
         
         nameLabel.stringValue = item.displayName
         
+        // Set tooltip with file info
+        let sizeString = ByteCountFormatter.string(fromByteCount: item.fileSize, countStyle: .file)
+        toolTip = "\(item.displayName)\n\(item.kind.displayName) • \(sizeString)"
+        
         // Load thumbnail
         if let thumbnailPath = item.thumbnailPath {
             do {
@@ -118,6 +122,26 @@ class ShelfItemView: NSView {
     
     override func mouseDown(with event: NSEvent) {
         super.mouseDown(with: event)
+        
+        // Double-click to open file
+        if event.clickCount == 2, let item = item {
+            openFile(item)
+        }
+    }
+    
+    private func openFile(_ item: ShelfItem) {
+        guard let payloadPath = item.payloadPath else { return }
+        
+        do {
+            let storageDir = try FileManager.default.shelfStorageDirectory()
+            let fileURL = storageDir.appendingPathComponent(payloadPath)
+            
+            if FileManager.default.fileExists(atPath: fileURL.path) {
+                NSWorkspace.shared.open(fileURL)
+            }
+        } catch {
+            print("Error opening file: \(error)")
+        }
     }
     
     override func mouseDragged(with event: NSEvent) {
@@ -135,5 +159,117 @@ class ShelfItemView: NSView {
             beginDraggingSession(with: draggingItems, event: event, source: dragSource)
             delegate?.itemView(self, didStartDragging: item)
         }
+    }
+    
+    // MARK: - Context Menu
+    
+    override func rightMouseDown(with event: NSEvent) {
+        guard item != nil else { return }
+        
+        let menu = NSMenu()
+        
+        // Open & Preview
+        let openItem = NSMenuItem(title: "開く", action: #selector(menuOpenFile), keyEquivalent: "")
+        openItem.target = self
+        menu.addItem(openItem)
+        
+        let quickLookItem = NSMenuItem(title: "クイックルック", action: #selector(menuQuickLook), keyEquivalent: "")
+        quickLookItem.target = self
+        menu.addItem(quickLookItem)
+        
+        let showItem = NSMenuItem(title: "Finderで表示", action: #selector(menuShowInFinder), keyEquivalent: "")
+        showItem.target = self
+        menu.addItem(showItem)
+        
+        menu.addItem(NSMenuItem.separator())
+        
+        // Copy & Share
+        let copyFileItem = NSMenuItem(title: "ファイルをコピー", action: #selector(menuCopyFile), keyEquivalent: "")
+        copyFileItem.target = self
+        menu.addItem(copyFileItem)
+        
+        let copyPathItem = NSMenuItem(title: "パスをコピー", action: #selector(menuCopyPath), keyEquivalent: "")
+        copyPathItem.target = self
+        menu.addItem(copyPathItem)
+        
+        let shareItem = NSMenuItem(title: "共有...", action: #selector(menuShare), keyEquivalent: "")
+        shareItem.target = self
+        menu.addItem(shareItem)
+        
+        menu.addItem(NSMenuItem.separator())
+        
+        // Delete
+        let deleteItem = NSMenuItem(title: "削除", action: #selector(menuDelete), keyEquivalent: "")
+        deleteItem.target = self
+        menu.addItem(deleteItem)
+        
+        NSMenu.popUpContextMenu(menu, with: event, for: self)
+    }
+    
+    @objc private func menuOpenFile() {
+        guard let item = item else { return }
+        openFile(item)
+    }
+    
+    @objc private func menuShowInFinder() {
+        guard let item = item, let payloadPath = item.payloadPath else { return }
+        
+        do {
+            let storageDir = try FileManager.default.shelfStorageDirectory()
+            let fileURL = storageDir.appendingPathComponent(payloadPath)
+            NSWorkspace.shared.activateFileViewerSelecting([fileURL])
+        } catch {
+            print("Error showing in Finder: \(error)")
+        }
+    }
+    
+    @objc private func menuCopyPath() {
+        guard let item = item, let payloadPath = item.payloadPath else { return }
+        
+        do {
+            let storageDir = try FileManager.default.shelfStorageDirectory()
+            let fileURL = storageDir.appendingPathComponent(payloadPath)
+            NSPasteboard.general.clearContents()
+            NSPasteboard.general.setString(fileURL.path, forType: .string)
+        } catch {
+            print("Error copying path: \(error)")
+        }
+    }
+    
+    @objc private func menuQuickLook() {
+        guard let item = item else { return }
+        NotificationCenter.default.post(name: NSNotification.Name("QuickLookShelfItem"), object: item)
+    }
+    
+    @objc private func menuCopyFile() {
+        guard let item = item, let payloadPath = item.payloadPath else { return }
+        
+        do {
+            let storageDir = try FileManager.default.shelfStorageDirectory()
+            let fileURL = storageDir.appendingPathComponent(payloadPath)
+            NSPasteboard.general.clearContents()
+            NSPasteboard.general.writeObjects([fileURL as NSURL])
+        } catch {
+            print("Error copying file: \(error)")
+        }
+    }
+    
+    @objc private func menuShare() {
+        guard let item = item, let payloadPath = item.payloadPath else { return }
+        
+        do {
+            let storageDir = try FileManager.default.shelfStorageDirectory()
+            let fileURL = storageDir.appendingPathComponent(payloadPath)
+            
+            let picker = NSSharingServicePicker(items: [fileURL])
+            picker.show(relativeTo: bounds, of: self, preferredEdge: .minY)
+        } catch {
+            print("Error sharing file: \(error)")
+        }
+    }
+    
+    @objc private func menuDelete() {
+        guard let item = item else { return }
+        NotificationCenter.default.post(name: NSNotification.Name("DeleteShelfItem"), object: item)
     }
 }
